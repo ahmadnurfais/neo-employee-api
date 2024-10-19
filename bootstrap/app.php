@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\ApiResponse;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -17,30 +18,9 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->render(function (\Throwable $e, \Illuminate\Http\Request $request) {
             if ($request->is('api/*') || $request->expectsJson()) {
-                $status = 500;
-                $message = 'Internal Server Error';
-
-                if ($e instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
-                    $status = 404;
-                    $message = 'Not Found';
-                } elseif ($e instanceof \Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException) {
-                    $status = 405;
-                    $message = 'Method Not Allowed';
-                } elseif ($e instanceof \Illuminate\Database\QueryException && $e->getCode() === '23000') {
-                    $status = 409;
-                    $message = 'Duplicate Entry';
-                } elseif ($e instanceof \Illuminate\Validation\ValidationException) {
-                    return response()->json([
-                        'message' => 'Validation failed',
-                        'errors' => $e->errors(),
-                    ], 422);
-                }
-
-                return response()->json([
-                    'message' => $message,
-                    'error' => $e->getMessage()
-                ], $status);
+                return ApiResponse::error($e); // Call the static class function to return the API response error
             }
+            return null; // Non-API exceptions. Laravel will handle it.
         });
     })
     ->create();
