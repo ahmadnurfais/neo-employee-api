@@ -17,7 +17,7 @@ class MongoSessionHandler extends DatabaseSessionHandler
         $payload = [
             'payload' => base64_encode($data),
             'last_activity' => $this->currentTime(),
-            'custom' => 'aimer', // debug
+            'custom' => 'aimer_session_debug', // debug
         ];
 
         if (!$this->container) {
