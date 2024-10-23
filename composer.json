@@ -9,7 +9,8 @@
         "laravel/framework": "^11.9",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
-        "mongodb/laravel-mongodb": "^5.0"
+        "mongodb/laravel-mongodb": "^5.0",
+        "tymon/jwt-auth": "^2.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -53,7 +54,9 @@
             "php artisan config:clear",
             "php artisan view:clear",
             "rm -rf storage/framework/views/*",
-            "php artisan serve"
+            "php artisan clear-compiled",
+            "sudo lsof -t -i :8001 | xargs -r sudo kill",
+            "php artisan serve --host=0.0.0.0 --port=8001"
         ]
     },
     "extra": {
